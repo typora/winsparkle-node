@@ -1,0 +1,22 @@
+{
+  "name": "winsparkle-node",
+  "version": "0.4.0",
+  "description": "a node.js port for winsparkle",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "keywords": [
+    "sparkle",
+    "update",
+    "windows"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typora/winsparkle-node.git"
+  },
+  "author": "Abner Lee",
+  "license": "MIT",
+  "gypfile": true
+}
