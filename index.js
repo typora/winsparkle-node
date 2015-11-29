@@ -1,4 +1,4 @@
-var addon = require('build/Release/addon.node');
+var addon = require('./build/Release/addon.node');
 
 module.exports = {
   winSparkleCleanup : addon.winSparkleCleanup,
