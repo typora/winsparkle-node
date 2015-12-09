@@ -4,5 +4,7 @@ module.exports = {
   winSparkleCleanup : addon.winSparkleCleanup,
   winSparkleSetAppcastUrl : addon.winSparkleSetAppcastUrl,
   winSparkleCheckUpdateWithUI : addon.winSparkleCheckUpdateWithUI,
-  winSparkleInit : addon.winSparkleInit
+  winSparkleInit : addon.winSparkleInit,
+  winSparkleSetAutomaticCheckForUpdates : addon.winSparkleSetAutomaticCheckForUpdates,
+  winSparklegetAutomaticCheckForUpdates : addon.winSparklegetAutomaticCheckForUpdates
 };

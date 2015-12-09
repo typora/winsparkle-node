@@ -28,11 +28,25 @@ namespace nodesparkle {
 	  	win_sparkle_init();
 	}
 
+	void _win_sparkle_set_automatic_check_for_updates(const FunctionCallbackInfo<Value>& args) {
+		int state = ((bool) args[0]->BooleanValue()) ? 1 : 0;
+	  	win_sparkle_set_automatic_check_for_updates(state);
+	}
+
+	void _win_sparkle_get_automatic_check_for_updates(const FunctionCallbackInfo<Value>& args) {
+	  	int state = win_sparkle_get_automatic_check_for_updates();
+	  	Isolate* isolate = args.GetIsolate();
+  		args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
+	}
+
+
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "winSparkleCleanup", _win_sparkle_cleanup);
 	  	NODE_SET_METHOD(exports, "winSparkleSetAppcastUrl", _win_sparkle_set_appcast_url);
 	  	NODE_SET_METHOD(exports, "winSparkleCheckUpdateWithUI", _win_sparkle_check_update_with_ui);
 	  	NODE_SET_METHOD(exports, "winSparkleInit", _win_sparkle_init);
+	  	NODE_SET_METHOD(exports, "winSparkleSetAutomaticCheckForUpdates", _win_sparkle_set_automatic_check_for_updates);
+	  	NODE_SET_METHOD(exports, "winSparklegetAutomaticCheckForUpdates", _win_sparkle_get_automatic_check_for_updates);
 	}
 
 	NODE_MODULE(addon, init)
