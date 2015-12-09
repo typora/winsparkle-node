@@ -36,7 +36,7 @@ namespace nodesparkle {
 	void _win_sparkle_get_automatic_check_for_updates(const FunctionCallbackInfo<Value>& args) {
 	  	int state = win_sparkle_get_automatic_check_for_updates();
 	  	Isolate* isolate = args.GetIsolate();
-  		args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
+  		args.GetReturnValue().Set(v8::Boolean::New(isolate, state > 0));
 	}
 
 
@@ -46,7 +46,7 @@ namespace nodesparkle {
 	  	NODE_SET_METHOD(exports, "winSparkleCheckUpdateWithUI", _win_sparkle_check_update_with_ui);
 	  	NODE_SET_METHOD(exports, "winSparkleInit", _win_sparkle_init);
 	  	NODE_SET_METHOD(exports, "winSparkleSetAutomaticCheckForUpdates", _win_sparkle_set_automatic_check_for_updates);
-	  	NODE_SET_METHOD(exports, "winSparklegetAutomaticCheckForUpdates", _win_sparkle_get_automatic_check_for_updates);
+	  	NODE_SET_METHOD(exports, "winSparkleGetAutomaticCheckForUpdates", _win_sparkle_get_automatic_check_for_updates);
 	}
 
 	NODE_MODULE(addon, init)

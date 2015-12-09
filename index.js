@@ -1,10 +1,10 @@
 var addon = require('./build/Release/addon.node');
 
 module.exports = {
-  winSparkleCleanup : addon.winSparkleCleanup,
-  winSparkleSetAppcastUrl : addon.winSparkleSetAppcastUrl,
-  winSparkleCheckUpdateWithUI : addon.winSparkleCheckUpdateWithUI,
-  winSparkleInit : addon.winSparkleInit,
-  winSparkleSetAutomaticCheckForUpdates : addon.winSparkleSetAutomaticCheckForUpdates,
-  winSparklegetAutomaticCheckForUpdates : addon.winSparklegetAutomaticCheckForUpdates
+  cleanup : addon.winSparkleCleanup,
+  setAppcastUrl : addon.winSparkleSetAppcastUrl,
+  checkUpdateWithUI : addon.winSparkleCheckUpdateWithUI,
+  init : addon.winSparkleInit,
+  setAutomaticCheckForUpdates : addon.winSparkleSetAutomaticCheckForUpdates,
+  getAutomaticCheckForUpdates : addon.winSparkleGetAutomaticCheckForUpdates
 };
