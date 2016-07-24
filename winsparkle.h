@@ -30,8 +30,12 @@
 
 #include "winsparkle-version.h"
 
-#if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER)
-#pragma comment(lib, "..\\WinSparkle.lib")
+#if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER) && defined(_M_IX86_FP) 
+#pragma comment(lib, "..\\32\\WinSparkle.lib")
+#endif
+
+#if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER) && defined(_M_X64) 
+#pragma comment(lib, "..\\64\\WinSparkle.lib")
 #endif
 
 #ifdef __cplusplus
@@ -80,6 +84,50 @@ WIN_SPARKLE_API void __cdecl win_sparkle_cleanup();
 
 
 /*--------------------------------------------------------------------------*
+                             Language settings
+*--------------------------------------------------------------------------*/
+
+/**
+@name Language settings
+
+These functions set user interface language. They must be called before
+win_sparkle_init() to have any effect. If none of them is called, WinSparkle
+detects the UI language automatically.
+*/
+//@{
+
+/**
+    Sets UI language from its ISO code.
+
+    This function must be called before win_sparkle_init().
+
+    @param lang ISO 639 language code with an optional ISO 3116 country
+                code, e.g. "fr", "pt-PT", "pt-BR" or "pt_BR", as used
+                e.g. by ::GetThreadPreferredUILanguages() too.
+
+    @since 0.5
+
+    @see win_sparkle_set_langid()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_lang(const char *lang);
+
+/**
+    Sets UI language from its Win32 LANGID code.
+
+    This function must be called before win_sparkle_init().
+
+    @param lang Language code (LANGID) as created by the MAKELANGID macro
+                or returned by e.g. ::GetThreadUILanguage()
+
+    @since 0.5
+
+    @see win_sparkle_set_lang()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_langid(unsigned short lang);
+
+//@}
+
+/*--------------------------------------------------------------------------*
                                Configuration
  *--------------------------------------------------------------------------*/
 
@@ -105,6 +153,13 @@ WIN_SPARKLE_API void __cdecl win_sparkle_cleanup();
     Windows resource named "FeedURL" of type "APPCAST".
 
     @param url  URL of the appcast.
+
+    @note Always use HTTPS feeds, do not use unencrypted HTTP! This is
+          necessary to prevent both leaking user information and preventing
+          various MITM attacks.
+
+    @note See https://github.com/vslavik/winsparkle/wiki/Appcast-Feeds for
+          more information about appcast feeds.
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
 
@@ -222,6 +277,16 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 */
 WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time();
 
+/// Callback type for win_sparkle_error_callback()
+typedef void (__cdecl *win_sparkle_error_callback_t)();
+
+/**
+    Set callback to be called when the updater encounters an error.
+
+    @since 0.5
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_callback_t callback);
+
 /// Callback type for win_sparkle_can_shutdown_callback()
 typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
 
@@ -233,7 +298,7 @@ typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
     the host application can be safely shut down or FALSE if not (e.g. because
     the user has unsaved documents).
 
-    @note There's no guaranteed about the thread from which the callback is called,
+    @note There's no guarantee about the thread from which the callback is called,
           except that it certainly *won't* be called from the app's main thread.
           Make sure the callback is thread-safe.
 
@@ -251,10 +316,13 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
     Set callback for shutting down the application.
 
     This callback will be called to ask the host to shut down immediately after
-    launching the installer. It will only be called if the call to the callback
-    set with win_sparkle_set_can_shutdown_callback() returned TRUE.
+    launching the installer. Its implementation should gracefully terminate the
+    application.
 
-    @note There's no guaranteed about the thread from which the callback is called,
+    It will only be called if the call to the callback set with
+    win_sparkle_set_can_shutdown_callback() returns TRUE.
+
+    @note There's no guarantee about the thread from which the callback is called,
           except that it certainly *won't* be called from the app's main thread.
           Make sure the callback is thread-safe.
 
@@ -263,6 +331,56 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
     @see win_sparkle_set_can_shutdown_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
+
+/// Callback type for win_sparkle_did_find_update_callback()
+typedef void(__cdecl *win_sparkle_did_find_update_callback_t)();
+
+/**
+    Set callback to be called when the updater did find an update.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action after WinSparkle checks for updates.
+
+    @since 0.5
+
+    @see win_sparkle_did_not_find_update_callback()
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_did_find_update_callback(win_sparkle_did_find_update_callback_t callback);
+
+/// Callback type for win_sparkle_did_not_find_update_callback()
+typedef void (__cdecl *win_sparkle_did_not_find_update_callback_t)();
+
+/**
+    Set callback to be called when the updater did not find an update.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action after WinSparkle checks for updates.
+
+    @since 0.5
+
+    @see win_sparkle_did_find_update_callback()
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_did_not_find_update_callback(win_sparkle_did_not_find_update_callback_t callback);
+
+/// Callback type for win_sparkle_update_cancelled_callback()
+typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
+
+/**
+    Set callback to be called when the user cancels a download.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action when the installation is interrupted.
+
+    @since 0.5
+
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback);
 
 //@}
 
@@ -290,9 +408,33 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
 
     This function returns immediately.
 
+    @note Because this function is intended for manual, user-initiated checks
+          for updates, it ignores "Skip this version" even if the user checked
+          it previously.
+
     @see win_sparkle_check_update_without_ui()
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
+
+/**
+    Checks if an update is available, showing progress UI to the user and
+    immediately installing the update if one is available.
+
+    This is useful for the case when users should almost always use the
+    newest version of your software. When called, WinSparkle will check for
+    updates showing a progress UI to the user. If an update is found the update
+    prompt will be skipped and the update will be installed immediately.
+
+    If your application expects to do something after checking for updates you
+    may wish to use win_sparkle_set_did_not_find_update_callback() and
+    win_sparkle_set_update_cancelled_callback().
+
+    @since 0.5
+
+    @see win_sparkle_set_did_find_update_callback()
+    @see win_sparkle_set_update_cancelled_callback()
+ */
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui_and_install();
 
 /**
     Checks if an update is available.
@@ -305,6 +447,8 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
     checks on interval option or manual check with visible UI.
 
     This function returns immediately.
+
+    @note This function respects "Skip this version" choice by the user.
 
     @since 0.4
 

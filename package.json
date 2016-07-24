@@ -1,11 +1,13 @@
 {
   "name": "winsparkle-node",
-  "version": "0.4.4",
+  "version": "0.5.2",
   "description": "a node.js port for winsparkle",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "node-gyp rebuild"
+    "install": "node-gyp rebuild",
+    "build:ia32": "node-gyp clean configure build --verbose --arch=ia32",
+    "build:x64": "node-gyp clean configure build --verbose --arch=x64"
   },
   "keywords": [
     "sparkle",
