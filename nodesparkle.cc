@@ -19,6 +19,11 @@ namespace nodesparkle {
 	  	std::string url(*v8::String::Utf8Value(args[0]));
 	  	win_sparkle_set_appcast_url(url.c_str());
 	}
+	
+	void _win_sparkle_set_lang(const FunctionCallbackInfo<Value>& args) {
+	  	std::string lang(*v8::String::Utf8Value(args[0]));
+	  	win_sparkle_set_lang(lang.c_str());
+	}
 
 	void _win_sparkle_check_update_with_ui(const FunctionCallbackInfo<Value>& args) {
 	  	win_sparkle_check_update_with_ui();
@@ -43,6 +48,7 @@ namespace nodesparkle {
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "winSparkleCleanup", _win_sparkle_cleanup);
 	  	NODE_SET_METHOD(exports, "winSparkleSetAppcastUrl", _win_sparkle_set_appcast_url);
+		NODE_SET_METHOD(exports, "winSparkleSetLang", _win_sparkle_set_lang);
 	  	NODE_SET_METHOD(exports, "winSparkleCheckUpdateWithUI", _win_sparkle_check_update_with_ui);
 	  	NODE_SET_METHOD(exports, "winSparkleInit", _win_sparkle_init);
 	  	NODE_SET_METHOD(exports, "winSparkleSetAutomaticCheckForUpdates", _win_sparkle_set_automatic_check_for_updates);
