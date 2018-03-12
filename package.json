@@ -1,6 +1,6 @@
 {
   "name": "winsparkle-node",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "a node.js port for winsparkle",
   "main": "index.js",
   "scripts": {
