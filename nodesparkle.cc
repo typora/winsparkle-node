@@ -29,6 +29,10 @@ namespace nodesparkle {
 	  	win_sparkle_check_update_with_ui();
 	}
 
+	void _win_sparkle_check_update_without_ui(const FunctionCallbackInfo<Value>& args) {
+	  	win_sparkle_check_update_without_ui();
+	}
+
 	void _win_sparkle_init(const FunctionCallbackInfo<Value>& args) {
 	  	win_sparkle_init();
 	}
@@ -50,6 +54,7 @@ namespace nodesparkle {
 	  	NODE_SET_METHOD(exports, "winSparkleSetAppcastUrl", _win_sparkle_set_appcast_url);
 		NODE_SET_METHOD(exports, "winSparkleSetLang", _win_sparkle_set_lang);
 	  	NODE_SET_METHOD(exports, "winSparkleCheckUpdateWithUI", _win_sparkle_check_update_with_ui);
+	  	NODE_SET_METHOD(exports, "winSparkleCheckUpdateWithoutUI", _win_sparkle_check_update_without_ui);
 	  	NODE_SET_METHOD(exports, "winSparkleInit", _win_sparkle_init);
 	  	NODE_SET_METHOD(exports, "winSparkleSetAutomaticCheckForUpdates", _win_sparkle_set_automatic_check_for_updates);
 	  	NODE_SET_METHOD(exports, "winSparkleGetAutomaticCheckForUpdates", _win_sparkle_get_automatic_check_for_updates);
